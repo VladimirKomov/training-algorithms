@@ -1,6 +1,3 @@
-from pygments.lexers.robotframework import normalize
-
-
 class Luhn:
     def __init__(self, card_num: str):
         self.card_num: str = card_num
