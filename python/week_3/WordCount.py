@@ -1,18 +1,15 @@
+import re
+
+
 def count_words(sentence):
-    gap = """.:!?\t\n /"/"""
     words = {}
-    prev = 0
-    for i in range(len(sentence) - 1):
-        if sentence[i] in gap:
-            if (prev + 1) == i:
-                prev += 1
-            else:
-                word = sentence[prev:i]
-                prev = i + 1
-                print(word)
+    templet = r"[a-z0-9]+"
 
+    for word in re.findall(templet, sentence.lower()):
+        words[word] = words.get(word, 0) + 1
 
+    return words
 
 
 if __name__ == '__main__':
-    print(count_words("""That's the password: 'PASSWORD 123'!", cried the Special Agent.\nSo I fled."""))
+    print(count_words("'First: don't laugh. Then: don't cry. You're getting it.'"))
