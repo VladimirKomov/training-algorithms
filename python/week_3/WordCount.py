@@ -3,7 +3,7 @@ import re
 
 def count_words(sentence):
     words = {}
-    templet = r"[a-z0-9]+"
+    templet = r"[a-z0-9]+(?:'[a-z0-9]+)?"
 
     for word in re.findall(templet, sentence.lower()):
         words[word] = words.get(word, 0) + 1
