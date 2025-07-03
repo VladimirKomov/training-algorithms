@@ -1,0 +1,133 @@
+
+📦 FastAPI Snippets — лайвкодинг шпаргалка
+
+🟢 Стартовое приложение
+-----------------------
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"message": "Hello World"}
+
+🔄 CRUD-модель и роуты
+----------------------
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import List
+
+router = APIRouter()
+
+class Task(BaseModel):
+    id: int
+    title: str
+    done: bool = False
+
+tasks: List[Task] = []
+
+@router.post("/tasks", response_model=Task)
+def create_task(task: Task):
+    tasks.append(task)
+    return task
+
+@router.get("/tasks", response_model=List[Task])
+def list_tasks():
+    return tasks
+
+@app.get("/tasks/{task_id}", response_model=Task)
+def get_task(task_id: int):
+    for task in tasks:
+        if task.id == task_id:
+            return task
+    raise HTTPException(status_code=404, detail="Task not found")
+
+🔐 JWT-заготовка (черновик)
+---------------------------
+from jose import JWTError, jwt
+
+SECRET_KEY = "mysecret"
+ALGORITHM = "HS256"
+
+def create_token(data: dict):
+    return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+
+def decode_token(token: str):
+    try:
+        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except JWTError:
+        return None
+
+📂 Загрузка .env (python-dotenv)
+-------------------------------
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+DB_URL = os.getenv("DB_URL")
+
+🟢 Uvicorn запуск
+-----------------
+uvicorn main:app --reload
+
+============================================
+
+🏰 Django Snippets — лайвкодинг шпаргалка
+
+🛠️ Создание проекта и приложения
+--------------------------------
+django-admin startproject myproject .
+python manage.py startapp myapp
+
+🗂️ Модель + миграции
+---------------------
+# models.py
+from django.db import models
+
+class Task(models.Model):
+    title = models.CharField(max_length=100)
+    done = models.BooleanField(default=False)
+
+# Команды:
+python manage.py makemigrations
+python manage.py migrate
+
+🛣️ Вьюшка и URL
+----------------
+# views.py
+from django.http import JsonResponse
+from .models import Task
+
+def task_list(request):
+    tasks = list(Task.objects.values())
+    return JsonResponse(tasks, safe=False)
+
+# urls.py
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("tasks/", views.task_list),
+]
+
+🧩 DRF базовый APIView
+----------------------
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Task
+from .serializers import TaskSerializer
+
+class TaskList(APIView):
+    def get(self, request):
+        tasks = Task.objects.all()
+        serializer = TaskSerializer(tasks, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = TaskSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

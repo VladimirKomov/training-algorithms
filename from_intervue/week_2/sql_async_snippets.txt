@@ -1,0 +1,95 @@
+
+📦 SQL Snippets — базовые конструкции
+
+🟢 CREATE TABLE
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    created_at TIMESTAMP DEFAULT now()
+);
+
+🟢 SELECT
+SELECT * FROM users;
+SELECT name, email FROM users WHERE id = 5;
+SELECT COUNT(*) FROM users WHERE email LIKE '%@gmail.com';
+
+🟢 JOIN
+SELECT o.id, u.name
+FROM orders o
+JOIN users u ON o.user_id = u.id;
+
+🟢 GROUP BY + HAVING
+SELECT user_id, COUNT(*) as total
+FROM orders
+GROUP BY user_id
+HAVING COUNT(*) > 5;
+
+🟢 UPDATE + DELETE
+UPDATE users SET name = 'Alice' WHERE id = 1;
+DELETE FROM users WHERE id = 10;
+
+🟢 LIMIT + OFFSET (пагинация)
+SELECT * FROM users ORDER BY created_at DESC LIMIT 10 OFFSET 20;
+=======================================================
+⏱️ Async / Await в Python (асинхронность)
+🧠 Базовые конструкции
+import asyncio
+
+async def say_hello():
+    print("Hello")
+    await asyncio.sleep(1)
+    print("World")
+
+asyncio.run(say_hello())
+
+🧩 Запуск нескольких задач параллельно
+async def task(name, delay):
+    await asyncio.sleep(delay)
+    return f"{name} done"
+
+async def main():
+    results = await asyncio.gather(
+        task("A", 1),
+        task("B", 2),
+        task("C", 3),
+    )
+    print(results)
+
+asyncio.run(main())
+
+🌀 Запуск с create_task
+async def delayed_print():
+    await asyncio.sleep(1)
+    print("Printed later")
+
+async def main():
+    task = asyncio.create_task(delayed_print())
+    print("Printed first")
+    await task
+
+asyncio.run(main())
+
+📦 Async в FastAPI
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/wait")
+async def wait_example():
+    await asyncio.sleep(1)
+    return {"done": True}
+
+🗂️ Async SQLAlchemy (v1.4+)
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = "postgresql+asyncpg://user:pass@localhost/db"
+
+engine = create_async_engine(DATABASE_URL)
+async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+
+async def get_user(user_id: int):
+    async with async_session() as session:
+        result = await session.execute(select(User).where(User.id == user_id))
+        return result.scalar()

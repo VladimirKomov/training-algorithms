@@ -1,0 +1,66 @@
+
+📌 Установка зависимостей — шпаргалка
+
+🐍 Виртуальное окружение (общая часть)
+-------------------------------------
+python -m venv venv
+# Linux/macOS:
+source venv/bin/activate
+# Windows:
+venv\Scripts\activate
+
+🚀 FastAPI (современный асинхронный бэкенд)
+------------------------------------------
+🔧 Базовая установка
+pip install fastapi uvicorn
+
+📦 Часто используемые зависимости:
+pip install sqlalchemy asyncpg                         # PostgreSQL и ORM
+pip install python-jose[cryptography] passlib[bcrypt] # JWT
+pip install httpx                                      # Асинхронные запросы
+pip install email-validator                            # Валидация email
+pip install aiofiles                                   # Работа с файлами
+pip install python-dotenv                              # .env конфигурация
+
+✅ requirements.txt (FastAPI)
+fastapi
+uvicorn
+sqlalchemy
+asyncpg
+python-jose[cryptography]
+passlib[bcrypt]
+httpx
+email-validator
+aiofiles
+python-dotenv
+
+🏰 Django (классический фреймворк)
+---------------------------------
+🔧 Базовая установка
+pip install django
+
+🔧 REST API + полезные библиотеки
+pip install djangorestframework                         # API
+pip install psycopg2-binary                             # PostgreSQL
+pip install drf-yasg                                    # Swagger
+pip install django-cors-headers                         # CORS
+pip install python-decouple                             # .env конфигурация
+pip install Pillow                                      # Работа с изображениями
+
+✅ requirements.txt (Django)
+django
+djangorestframework
+psycopg2-binary
+drf-yasg
+django-cors-headers
+python-decouple
+Pillow
+
+📌 Команды запуска
+------------------
+🟢 FastAPI
+uvicorn main:app --reload
+
+🟢 Django
+django-admin startproject myproject .
+python manage.py runserver
