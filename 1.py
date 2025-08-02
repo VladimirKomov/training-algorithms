@@ -1,15 +1,19 @@
-def find_duplicates(nums):
-    seen = set()
-    duplicates = set()
-
-    for num in nums:
-        if num in seen:
-            duplicates.add(num)
-        else:
-            seen.add(num)
-
-    return list(duplicates)
+import asyncio
 
 
-if __name__ == "__main__":
-    print(find_duplicates([1, 2, 3, 2, 4, 1, 1]))
+async def a(n):
+    await asyncio.sleep(n)
+    return n
+
+async def t_asyncio():
+    a1 = asyncio.create_task(a(1))
+    a2 = await a(2)
+    a3 = a(3)
+
+    print(await a1)
+    print(a2)
+    print(await a3)
+
+
+if __name__ == '__main__':
+    asyncio.run(t_asyncio())
