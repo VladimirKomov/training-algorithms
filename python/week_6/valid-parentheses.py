@@ -5,23 +5,28 @@ class Solution(object):
         :rtype: bool
         """
         parentheses = {'(' : ')',  '{' : '}', '[' : ']'}
+        #parentheses = {')' : '(',  '}' : '{', ']' : '['}
         if len(s) == 0:
             return False
 
         if len(s) % 2 != 0:
             return False
 
-        
+        steck = []
 
-        for i in range(int(len(s) / 2)):
-            if s[len(s) - 1 - i] != parentheses[s[i]] or s[i + 1] != parentheses[s[i]]:
-                return False
+        for s in s:
+            if s in parentheses:
+                steck.append(s)
+            else:
+                last = steck.pop()
+                if parentheses[last] != s:
+                    return False
 
-        return True
+        return steck == []
 
 
 
 
 if __name__ == '__main__':
     s = Solution()
-    print(s.isValid("()[]{}"))
+    print(s.isValid("([)]"))
